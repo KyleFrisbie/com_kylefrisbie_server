@@ -3,7 +3,7 @@
     "dbConfig": {
       "host": "localhost",
       "port": "27017",
-      "name": "com_kylefrisbie_test"
+      "dbName": "com_kylefrisbie"
     }
   }
 }
