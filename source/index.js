@@ -11,3 +11,5 @@ var port = 3000;
 var dbConfig = config.get('server.dbConfig');
 
 mongoose.connect('mongodb://' + dbConfig.host + ':' + dbConfig.port + '/' + dbConfig.name);
+
+
