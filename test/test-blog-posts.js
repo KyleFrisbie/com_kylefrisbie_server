@@ -12,10 +12,11 @@ function generateFakeBlogPost() {
         new BlogPost({
             'title': faker.lorem.sentence(),
             'subtitle': faker.lorem.sentence(),
+            'createdOn': Date(faker.date.past()),
+            'modifiedOn': Date(faker.date.recent()),
             'author': faker.fake("{{name.firstName}} {{name.lastName}}"),
             'imageURL': faker.image.imageUrl(),
             'tags': [{'name': faker.lorem.word()}, {'name': faker.lorem.word()}, {'name': faker.lorem.word()}],
-            'createdOn': Date(faker.date.past()),
             'postBody': faker.lorem.paragraphs()
         }));
 }
@@ -34,6 +35,44 @@ function saveBlogPostToDB(blogPost, done) {
             done(err);
         }
     });
+}
+
+function dateToString(date) {
+    return (new Date(date).toString());
+}
+
+function verifyValidBlogPostId(blogPost, res) {
+    res.body.blogPost.should.have.property('_id');
+    res.body.blogPost._id.should.equal((blogPost._id).toString());
+}
+
+function validateEachTag(originalTags, res) {
+    res.body.blogPost.should.have.property('tags');
+    res.body.blogPost.tags.should.be.a('Array')
+        .and.have.lengthOf(originalTags.length);
+    originalTags.forEach(function (originalTag, index) {
+        res.body.blogPost.tags[index].should.have.property('name');
+        res.body.blogPost.tags[index].name.should.equal(originalTag.name);
+        res.body.blogPost.tags[index].should.have.property('_id');
+        res.body.blogPost.tags[index]._id.should.equal((originalTag._id).toString());
+    })
+}
+
+function verifyValidBlogPost(blogPost, res) {
+    res.body.should.have.property('blogPost');
+    res.body.blogPost.should.have.property('title');
+    res.body.blogPost.title.should.equal(blogPost.title);
+    res.body.blogPost.should.have.property('subtitle');
+    res.body.blogPost.subtitle.should.equal(blogPost.subtitle);
+    res.body.blogPost.should.have.property('createdOn');
+    dateToString(res.body.blogPost.createdOn).should.equal(dateToString(blogPost.createdOn));
+    res.body.blogPost.should.have.property('modifiedOn');
+    dateToString(res.body.blogPost.modifiedOn).should.equal(dateToString(blogPost.modifiedOn));
+    res.body.blogPost.should.have.property('author');
+    res.body.blogPost.author.should.equal(blogPost.author);
+    res.body.blogPost.should.have.property('imageURL');
+    res.body.blogPost.imageURL.should.equal(blogPost.imageURL);
+    validateEachTag(blogPost.tags, res);
 }
 
 describe('blog-posts', function () {
@@ -66,13 +105,24 @@ describe('blog-posts', function () {
             .get('/posts/' + blogPostId)
             .end(function (err, res) {
                 genericResponseRequirements(res);
-                res.body.should.have.property('blogPost');
-                res.body.blogPost.should.have.property('_id');
-                console.log(res.body.blogPost);
+                verifyValidBlogPostId(blogPost, res);
+                verifyValidBlogPost(blogPost, res);
                 done();
-            })
+            });
     });
-    it('should post a single blog post on /posts POST');
+
+    it('should post a single blog post on /posts/create POST', function (done) {
+        const blogPost = generateFakeBlogPost();
+        chai.request(server)
+            .post('/posts/create')
+            .send(blogPost)
+            .end(function (err, res) {
+                genericResponseRequirements(res);
+                verifyValidBlogPost(blogPost, res);
+                done();
+            });
+    });
+
     it('should update a single blog post on /posts/\<id\> PUT');
     it('should delete a single blog post on /posts/\<id\> DELETE');
 });
