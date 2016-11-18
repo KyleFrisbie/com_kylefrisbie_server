@@ -88,6 +88,12 @@ function verifyValidBlogPost(blogPost, res) {
     validateEachTag(blogPost.tags, res);
 }
 
+function verifyUpdatedBlogPostProperties(updatedTitle, updateTags, res) {
+    res.body.blogPost.should.have.property('title');
+    res.body.blogPost.title.should.equal(updatedTitle);
+    validateEachTag(updateTags, res);
+}
+
 describe('blog-posts', function () {
     BlogPost.collection.drop();
 
@@ -141,8 +147,19 @@ describe('blog-posts', function () {
         saveBlogPostToDB(blogPost, done);
         const updatedTitle = faker.lorem.sentence();
         blogPost.title = updatedTitle;
-        const updatedTags = blogPost.tags.push({'name': faker.lorem.word()}, {'name': faker.lorem.word()});
+        const updatedTags = blogPost.tags;
+        updatedTags.push({'name': faker.lorem.word()}, {'name': faker.lorem.word()});
         blogPost.tags = updatedTags;
+        chai.request(server)
+            .put('/posts/' + blogPost._id)
+            .send(blogPost)
+            .end(function (err, res) {
+                genericResponseRequirements(res);
+                verifyValidBlogPostId(blogPost, res);
+                verifyUpdatedBlogPostProperties(updatedTitle, updatedTags, res);
+                done();
+            });
     });
+
     it('should delete a single blog post on /posts/\<id\> DELETE');
 });

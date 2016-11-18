@@ -60,4 +60,21 @@ BlogPostController.createBlogPost = function (req, res, next) {
     });
 };
 
+BlogPostController.updateBlogPost = function (req, res, next) {
+
+    BlogPost.findOne({'_id': req.params.id}, function (err, blogPost) {
+        if (err) {
+            return res.json({
+                "success": false,
+                "blogPost": req.body
+            });
+        }
+        blogPost = req.body;
+        return res.json({
+            "success": true,
+            "blogPost": blogPost
+        });
+    });
+};
+
 module.exports = BlogPostController;
