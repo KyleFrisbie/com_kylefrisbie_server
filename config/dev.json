@@ -1,0 +1,9 @@
+{
+  "server": {
+    "dbConfig": {
+      "host": "localhost",
+      "port": "27017",
+      "name": "com_kylefrisbie_dev"
+    }
+  }
+}
