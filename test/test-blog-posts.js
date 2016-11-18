@@ -1,11 +1,13 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+const chaiAsPromised = require('chai-as-promised');
 const faker = require('faker');
 const server = require('../source/index');
 const BlogPost = require('../source/models/blog-post-model');
 
 const should = chai.should();
 chai.use(chaiHttp);
+chai.use(chaiAsPromised);
 
 function generateFakeBlogPost() {
     return (
@@ -96,6 +98,15 @@ function verifyUpdatedBlogPostProperties(updatedTitle, updateTags, res) {
     res.body.blogPost.should.have.property('title');
     res.body.blogPost.title.should.equal(updatedTitle);
     validateEachTag(updateTags, res);
+}
+
+function getBlogPostCount(done) {
+    BlogPost.count({}, function (err, count) {
+        if(err) {
+            done(err);
+        }
+        return count;
+    })
 }
 
 describe('blog-posts', function () {
