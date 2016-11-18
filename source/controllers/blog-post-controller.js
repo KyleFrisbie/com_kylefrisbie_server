@@ -1,4 +1,4 @@
-const BlogPost = require('../models/blog-post-model.js');
+const BlogPost = require('../models/blog-post-model');
 const TagUtility = require('../utilities/tag-utility');
 
 const BlogPostController = {};
