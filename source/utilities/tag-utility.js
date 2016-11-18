@@ -6,7 +6,7 @@ TagUtility.addTags = function (tagList) {
     return new Promise(function (resolve, reject) {
         var tags = [];
         tagList.forEach(function (tag) {
-            mongoose.model('tags').findOne({'name': tag.name}, function (err, foundTag) {
+            TagModel.findOne({'name': tag.name}, function (err, foundTag) {
                 if (err) {
                     reject(Error(err));
                 }
