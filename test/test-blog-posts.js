@@ -46,15 +46,28 @@ function verifyValidBlogPostId(blogPost, res) {
     res.body.blogPost._id.should.equal((blogPost._id).toString());
 }
 
+function sortTagArray(tagArray) {
+    return (tagArray.sort(function (a, b) {
+        var x = a.name.toLowerCase();
+        var y = b.name.toLowerCase();
+        if (x < y) { return -1; }
+        if (x > y) { return 1; }
+        return 0;
+    }));
+}
+
 function validateEachTag(originalTags, res) {
     res.body.blogPost.should.have.property('tags');
     res.body.blogPost.tags.should.be.a('Array')
         .and.have.lengthOf(originalTags.length);
-    originalTags.forEach(function (originalTag, index) {
-        res.body.blogPost.tags[index].should.have.property('name');
-        res.body.blogPost.tags[index].name.should.equal(originalTag.name);
-        res.body.blogPost.tags[index].should.have.property('_id');
-        res.body.blogPost.tags[index]._id.should.equal((originalTag._id).toString());
+
+    var sortedOriginalTags = sortTagArray(originalTags);
+    var sortedResponseTags = sortTagArray(res.body.blogPost.tags);
+    sortedOriginalTags.forEach(function (originalTag, index) {
+        sortedResponseTags[index].should.have.property('name');
+        sortedResponseTags[index].name.should.equal(originalTag.name);
+        sortedResponseTags[index].should.have.property('_id');
+        sortedResponseTags[index]._id.should.equal((originalTag._id).toString());
     })
 }
 
@@ -123,6 +136,13 @@ describe('blog-posts', function () {
             });
     });
 
-    it('should update a single blog post on /posts/\<id\> PUT');
+    it('should update a single blog post on /posts/\<id\> PUT', function (done) {
+        const blogPost = generateFakeBlogPost();
+        saveBlogPostToDB(blogPost, done);
+        const updatedTitle = faker.lorem.sentence();
+        blogPost.title = updatedTitle;
+        const updatedTags = blogPost.tags.push({'name': faker.lorem.word()}, {'name': faker.lorem.word()});
+        blogPost.tags = updatedTags;
+    });
     it('should delete a single blog post on /posts/\<id\> DELETE');
 });
