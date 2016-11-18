@@ -61,7 +61,6 @@ BlogPostController.createBlogPost = function (req, res, next) {
 };
 
 BlogPostController.updateBlogPost = function (req, res, next) {
-
     BlogPost.findOne({'_id': req.params.id}, function (err, blogPost) {
         if (err) {
             return res.json({
@@ -73,6 +72,25 @@ BlogPostController.updateBlogPost = function (req, res, next) {
         return res.json({
             "success": true,
             "blogPost": blogPost
+        });
+    });
+};
+
+BlogPostController.deleteBlogPost = function (req, res, next) {
+    var success = true;
+    var promise = new Promise(function (resolve, reject) {
+        BlogPost.findByIdAndRemove(req.params._id, req.body, function (err, blogPost) {
+            if (err) {
+                success = false;
+            }
+            resolve(blogPost);
+        });
+    });
+
+    promise.then(function (blogPost) {
+        res.json({
+            'success': success,
+            'blogPost': blogPost
         });
     });
 };

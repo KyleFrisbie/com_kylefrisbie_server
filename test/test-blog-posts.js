@@ -50,8 +50,12 @@ function sortTagArray(tagArray) {
     return (tagArray.sort(function (a, b) {
         var x = a.name.toLowerCase();
         var y = b.name.toLowerCase();
-        if (x < y) { return -1; }
-        if (x > y) { return 1; }
+        if (x < y) {
+            return -1;
+        }
+        if (x > y) {
+            return 1;
+        }
         return 0;
     }));
 }
@@ -161,5 +165,14 @@ describe('blog-posts', function () {
             });
     });
 
-    it('should delete a single blog post on /posts/\<id\> DELETE');
+    it('should delete a single blog post on /posts/\<id\> DELETE', function (done) {
+        const blogPost = generateFakeBlogPost();
+        saveBlogPostToDB(blogPost, done);
+        chai.request(server)
+            .delete('/posts/' + blogPost._id)
+            .end(function (err, res) {
+                genericResponseRequirements(res);
+                done();
+            });
+    });
 });
