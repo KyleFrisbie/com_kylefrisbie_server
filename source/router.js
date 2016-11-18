@@ -1,5 +1,5 @@
+const BlogPostController = require('./controllers/blog-post-controller');
+
 module.exports = function (app) {
-    app.get('/posts', function (req, res) {
-        res.send('hello world');
-    });
+    app.get('/posts', BlogPostController.getAllBlogPosts);
 };

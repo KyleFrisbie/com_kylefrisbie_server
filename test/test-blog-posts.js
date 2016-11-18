@@ -11,6 +11,9 @@ describe('blog-posts', function () {
             .get('/posts')
             .end(function (err, res) {
                 res.should.have.status(200);
+                res.should.be.json;
+                res.body.should.be.a('object');
+                res.body.success.should.equal(true);
                 done();
             });
     });
