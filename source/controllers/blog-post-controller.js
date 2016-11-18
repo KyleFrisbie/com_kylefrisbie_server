@@ -61,17 +61,19 @@ BlogPostController.createBlogPost = function (req, res, next) {
 };
 
 BlogPostController.updateBlogPost = function (req, res, next) {
-    BlogPost.findOne({'_id': req.params.id}, function (err, blogPost) {
-        if (err) {
-            return res.json({
-                "success": false,
-                "blogPost": req.body
-            });
-        }
-        blogPost = req.body;
+    var success = true;
+    var promise = new Promise(function (resolve, reject) {
+        BlogPost.findByIdAndUpdate(req.body._id, req.body, function (err, blogPost) {
+            if (err) {
+                success = false;
+            }
+            resolve(blogPost);
+        });
+    });
+    promise.then(function (blogPost) {
         return res.json({
-            "success": true,
-            "blogPost": blogPost
+            "success": success,
+            "blogPost": req.body
         });
     });
 };
@@ -79,7 +81,7 @@ BlogPostController.updateBlogPost = function (req, res, next) {
 BlogPostController.deleteBlogPost = function (req, res, next) {
     var success = true;
     var promise = new Promise(function (resolve, reject) {
-        BlogPost.findByIdAndRemove(req.params._id, req.body, function (err, blogPost) {
+        BlogPost.findByIdAndRemove(req.params.id, req.body, function (err, blogPost) {
             if (err) {
                 success = false;
             }
