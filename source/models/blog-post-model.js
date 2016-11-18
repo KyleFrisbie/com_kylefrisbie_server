@@ -12,3 +12,6 @@ const blogPostSchema = new Schema({
     tags: [tagSchema],
     postBody: String
 });
+
+const BlogPostModel = mongoose.model('blogPosts', blogPostSchema);
+module.exports = BlogPostModel;
