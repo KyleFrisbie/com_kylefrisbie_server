@@ -3,6 +3,8 @@ var chaiHttp = require('chai-http');
 var server = require('../source/index');
 var should = chai.should();
 
+chai.use(chaiHttp);
+
 describe('blog-posts', function () {
     it('should get a list of all blog posts on /posts GET', function (done) {
         chai.request(server)

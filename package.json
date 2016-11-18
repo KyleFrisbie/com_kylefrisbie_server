@@ -4,7 +4,8 @@
   "description": "Server built using Node JS to support kylefrisbie.com blog site.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "wtest": "set NODE_ENV=test&&mocha"
   },
   "repository": {
     "type": "git",
