@@ -16,7 +16,7 @@ describe('blog-posts', function () {
     it('should generate dummy blog posts to test', function (done) {
         for (var i = 0; i < 50; i++) {
             var blogPost = TestUtilities.generateFakeBlogPost();
-            TestUtilities.saveBlogPostToDB(blogPost, done);
+            TestUtilities.saveDocumentToDB(blogPost, done);
         }
         done();
     });
@@ -35,7 +35,7 @@ describe('blog-posts', function () {
 
     it('should get a single blog post on /posts/\<id\> GET', function (done) {
         const blogPost = TestUtilities.generateFakeBlogPost();
-        TestUtilities.saveBlogPostToDB(blogPost, done);
+        TestUtilities.saveDocumentToDB(blogPost, done);
         const blogPostId = blogPost._id;
         chai.request(server)
             .get('/posts/' + blogPostId)
@@ -61,7 +61,7 @@ describe('blog-posts', function () {
 
     it('should update a single blog post on /posts/\<id\> PUT', function (done) {
         const blogPost = TestUtilities.generateFakeBlogPost();
-        TestUtilities.saveBlogPostToDB(blogPost, done);
+        TestUtilities.saveDocumentToDB(blogPost, done);
         const updatedTitle = faker.lorem.sentence();
         blogPost.title = updatedTitle;
         const updatedTags = blogPost.tags;
@@ -80,7 +80,7 @@ describe('blog-posts', function () {
 
     it('should delete a single blog post on /posts/\<id\> DELETE', function (done) {
         const blogPost = TestUtilities.generateFakeBlogPost();
-        TestUtilities.saveBlogPostToDB(blogPost, done);
+        TestUtilities.saveDocumentToDB(blogPost, done);
         chai.request(server)
             .delete('/posts/' + blogPost._id)
             .end(function (err, res) {

@@ -1,5 +1,6 @@
 const faker = require('faker');
 const BlogPost = require('../source/models/blog-post-model');
+const User = require('../source/models/user-model');
 
 const TestUtilities = {};
 
@@ -17,6 +18,16 @@ TestUtilities.generateFakeBlogPost = function () {
         }));
 };
 
+TestUtilities.generateFakeUser = function () {
+    return (
+        new User({
+            'username': faker.internet.userName(),
+            'password': faker.internet.password(),
+            'firstName': faker.name.firstName(),
+            'lastName': faker.name.lastName()
+        }));
+};
+
 TestUtilities.genericResponseRequirements = function (res) {
     res.should.have.status(200);
     res.should.be.json;
@@ -25,8 +36,8 @@ TestUtilities.genericResponseRequirements = function (res) {
     res.body.success.should.equal(true);
 };
 
-TestUtilities.saveBlogPostToDB = function (blogPost, done) {
-    blogPost.save(function (err, blogPost) {
+TestUtilities.saveDocumentToDB = function (document, done) {
+    document.save(function (err, document) {
         if (err) {
             done(err);
         }
