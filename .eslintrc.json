@@ -10,9 +10,9 @@
   "rules": {
     "quotes": [
       "error",
-      "dobule"
+      "single"
     ],
-    "no-extra-semi": "error",
+    "semi": ["error", "always"],
     "semi-spacing": "error",
     "comma-style": ["error", "last"],
     "indent": ["error", 2]
