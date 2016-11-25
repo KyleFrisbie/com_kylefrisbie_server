@@ -11,4 +11,8 @@ module.exports = function (app) {
 
   /* user routes */
   app.get('/users', UserController.getAllUsers);
+  app.get('/users/:id', UserController.getUser);
+  app.post('/users/create', UserController.createUser);
+  app.put('/users/:id', UserController.updateUser);
+  app.delete('/users/:id', UserController.deleteUser);
 };

@@ -24,7 +24,8 @@ TestUtilities.generateFakeUser = function () {
       'username': faker.internet.userName(),
       'password': faker.internet.password(),
       'firstName': faker.name.firstName(),
-      'lastName': faker.name.lastName()
+      'lastName': faker.name.lastName(),
+      'createdOn': Date(faker.date.past())
     }));
 };
 
@@ -48,9 +49,9 @@ TestUtilities.dateToString = function (date) {
   return (new Date(date).toString());
 };
 
-TestUtilities.verifyValidBlogPostId = function (blogPost, res) {
-  res.body.blogPost.should.have.property('_id');
-  res.body.blogPost._id.should.equal((blogPost._id).toString());
+TestUtilities.verifyValidDocumentId = function (document, resDocument) {
+  resDocument.should.have.property('_id');
+  resDocument._id.should.equal((document._id).toString());
 };
 
 TestUtilities.sortTagArray = function (tagArray) {
@@ -97,6 +98,20 @@ TestUtilities.verifyValidBlogPost = function (blogPost, res) {
   res.body.blogPost.should.have.property('imageURL');
   res.body.blogPost.imageURL.should.equal(blogPost.imageURL);
   this.validateEachTag(blogPost.tags, res);
+};
+
+TestUtilities.verifyValidUser = function (user, res) {
+  res.body.should.have.property('user');
+  res.body.user.should.have.property('username');
+  res.body.user.username.should.equal(user.username);
+  res.body.user.should.have.property('password');
+  res.body.user.password.should.equal(user.password);
+  res.body.user.should.have.property('firstName');
+  res.body.user.firstName.should.equal(user.firstName);
+  res.body.user.should.have.property('lastName');
+  res.body.user.lastName.should.equal(user.lastName);
+  res.body.user.should.have.property('createdOn');
+  this.dateToString(res.body.user.createdOn).should.equal(this.dateToString(user.createdOn));
 };
 
 TestUtilities.verifyUpdatedBlogPostProperties = function (updatedTitle, updateTags, res) {

@@ -44,7 +44,7 @@ describe('blog-posts', function () {
       .end(function (err, res) {
         if (err) { done(err); }
         TestUtilities.genericResponseRequirements(res);
-        TestUtilities.verifyValidBlogPostId(blogPost, res);
+        TestUtilities.verifyValidDocumentId(blogPost, res.body.blogPost);
         TestUtilities.verifyValidBlogPost(blogPost, res);
         done();
       });
@@ -77,7 +77,8 @@ describe('blog-posts', function () {
       .end(function (err, res) {
         if (err) { done(err); }
         TestUtilities.genericResponseRequirements(res);
-        TestUtilities.verifyValidBlogPostId(blogPost, res);
+        TestUtilities.verifyValidDocumentId(blogPost, res.body.blogPost);
+        TestUtilities.verifyValidBlogPost(blogPost, res);
         TestUtilities.verifyUpdatedBlogPostProperties(updatedTitle, updatedTags, res);
         done();
       });
@@ -90,6 +91,7 @@ describe('blog-posts', function () {
       .delete('/posts/' + blogPost._id)
       .end(function (err, res) {
         if (err) { done(err); }
+        // TODO: more testing to ensure blogPost document was removed
         TestUtilities.genericResponseRequirements(res);
         done();
       });
