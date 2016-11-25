@@ -6,6 +6,8 @@ const server = require('../source/index');
 const BlogPost = require('../source/models/blog-post-model');
 const TestUtilities = require('./test-utilities');
 
+const should = chai.should();
+
 chai.use(chaiHttp);
 chai.use(chaiAsPromised);
 
@@ -24,6 +26,7 @@ describe('blog-posts', function () {
     chai.request(server)
       .get('/posts')
       .end(function (err, res) {
+        if (err) { done(err); }
         TestUtilities.genericResponseRequirements(res);
         res.body.should.have.property('blogPosts');
         // TODO: make this an async test
@@ -39,6 +42,7 @@ describe('blog-posts', function () {
     chai.request(server)
       .get('/posts/' + blogPostId)
       .end(function (err, res) {
+        if (err) { done(err); }
         TestUtilities.genericResponseRequirements(res);
         TestUtilities.verifyValidBlogPostId(blogPost, res);
         TestUtilities.verifyValidBlogPost(blogPost, res);
@@ -52,6 +56,7 @@ describe('blog-posts', function () {
       .post('/posts/create')
       .send(blogPost)
       .end(function (err, res) {
+        if (err) { done(err); }
         TestUtilities.genericResponseRequirements(res);
         TestUtilities.verifyValidBlogPost(blogPost, res);
         done();
@@ -70,6 +75,7 @@ describe('blog-posts', function () {
       .put('/posts/' + blogPost._id)
       .send(blogPost)
       .end(function (err, res) {
+        if (err) { done(err); }
         TestUtilities.genericResponseRequirements(res);
         TestUtilities.verifyValidBlogPostId(blogPost, res);
         TestUtilities.verifyUpdatedBlogPostProperties(updatedTitle, updatedTags, res);
@@ -83,6 +89,7 @@ describe('blog-posts', function () {
     chai.request(server)
       .delete('/posts/' + blogPost._id)
       .end(function (err, res) {
+        if (err) { done(err); }
         TestUtilities.genericResponseRequirements(res);
         done();
       });

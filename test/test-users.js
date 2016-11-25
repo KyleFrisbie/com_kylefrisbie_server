@@ -6,6 +6,8 @@ const server = require('../source/index');
 // const Users = require('../source/models/user-model');
 const TestUtilities = require('./test-utilities');
 
+const should = chai.should();
+
 chai.use(chaiHttp);
 chai.use(chaiAsPromised);
 
@@ -22,6 +24,7 @@ describe('users', function () {
     chai.request(server)
       .get('/users')
       .end(function (err, res) {
+        if (err) { done(err); }
         TestUtilities.genericResponseRequirements(res);
         res.body.should.have.property('users');
         done();
